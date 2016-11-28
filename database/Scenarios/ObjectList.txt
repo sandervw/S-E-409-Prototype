@@ -1,0 +1,3 @@
+ScenarioObject1.obj
+ScenarioObject2.obj
+ScenarioObject3.obj
