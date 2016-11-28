@@ -19,13 +19,82 @@ Released   : 20131201
 <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800" rel="stylesheet" />
 <link href="default.css" rel="stylesheet" type="text/css" media="all" />
 <link href="fonts.css" rel="stylesheet" type="text/css" media="all" />
-
+<link rel="stylesheet" href="bootstrap-3.3.7-dist\css\bootstrap.css" />
+<script src="FileSaver.js"></script>
+<script src="jquery-3.1.1.min.js"></script>
+<script src="bootstrap-3.3.7-dist\js\bootstrap.js"></script>
 <!--[if IE 6]><link href="default_ie6.css" rel="stylesheet" type="text/css" /><![endif]-->
+
+<script>
+
+	function download(){
+		var g = document.getElementById("datafile");
+		var bb = new Blob([g.getContext], {type: 'text/plain'});
+		saveAs(bb, "test.txt");
+		var a = document.createElement('a');
+		a.download = 'hi';
+		a.href = window.URL.createObjectURL(bb);
+		a.textContent = 'Download ready';
+
+		a.dataset.downloadurl = ['text/plain', a.download, a.href].join(':');
+		a.draggable = true; // Don't really need, but good practice.
+		a.classList.add('dragout');
+
+		//output.appendChild(a);
+
+		a.onclick = function(e) {
+			if ('disabled' in this.dataset) {
+				return false;
+			}
+		}
+
+	}
+	
+	function showLibrary(){
+		document.getElementById('featured').style.display = "none";
+		document.getElementById('library').style.display = "block";
+	}
+	
+	function showHomepage(){
+		document.getElementById('featured').style.display = "block";
+		document.getElementById('library').style.display = "none";
+		document.getElementById('fileNames').style.display = "none";
+	}
+	
+	function showScenarios(){
+		document.getElementById('fileNames').style.display = "block";
+		readTextFile('database/Scenarios/ObjectList.txt');
+	}
+	
+	function showUIs(){
+		document.getElementById('fileNames').style.display = "block";
+	}
+	
+	function showSurveyTemplates(){
+		document.getElementById('fileNames').style.display = "block";
+	}
+	
+	function showSurveyResults(){
+		document.getElementById('fileNames').style.display = "block";
+	}
+	
+	function readTextFile(filePath){
+		var reader = new XMLHttpRequest();
+		reader.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				console.log(reader.responseText);
+			}
+		};
+        reader.open('get', filePath, true);
+		reader.send();
+	}
+
+</script>
 
 </head>
 <body>
 
-// Menu options
+<!-- Menu options -->
 <div id="header-wrapper">
 	<div id="header" class="container">
 		<div id="logo">
@@ -33,16 +102,14 @@ Released   : 20131201
 		</div>
 		<div id="menu">
 			<ul>
-				<li class="current_page_item"><a href="#" accesskey="1" title="">Homepage</a></li>
-				<li><a href="#" accesskey="2" title="">Library</a></li>
+				<li class="current_page_item"><a href="#" accesskey="1" title="" onclick="showHomepage()">Homepage</a></li>
+				<li><a href="#" accesskey="2" title="" onclick="showLibrary()">Library</a></li>
 			</ul>
 		</div>
 	</div>
 </div>
 
 <div id="featured">
-
-
 
 	<p>
 		Type some text (if you like):<br>
@@ -52,38 +119,47 @@ Released   : 20131201
 		<h3>Please specify a file, or a set of files:</h3>
 		<input type="file" id="datafile" size="40">
 	</p>
-	<script> function download(){
-    var g = document.getElementById("datafile");
-    var bb = new Blob([g.getContext], {type: 'text/plain'});
- var a = document.createElement('a');
-  a.download = 'hi';
-  a.href = window.URL.createObjectURL(bb);
-  a.textContent = 'Download ready';
-    
-    a.dataset.downloadurl = ['text/plain', a.download, a.href].join(':');
-  a.draggable = true; // Don't really need, but good practice.
-  a.classList.add('dragout');
-
-  output.appendChild(a);
-
-  a.onclick = function(e) {
-    if ('disabled' in this.dataset) {
-      return false;
-    }
-}
-  
-}
-    
-    </script>
+	
 	<div>
 		<input type="submit" value="Send" onclick = "download()">
-		</div>
+	</div>
+	
 </div>
 
-
+<div id="library" style="display: none">
+	</br>
+	<div class="form-group">
+		<div class=row>
+			<div class="col-xs-2">
+				<button id="viewScenarios" class="btn btn-primary" onClick="showScenarios()">view Scenario Library</button>
+			</div>
+			<div class="col-xs-2">
+				<button id="viewUIs" class="btn btn-primary" onClick="showUIs()">view UI Library</button>
+			</div>
+			<div class="col-xs-2">
+				<button id="viewSurveyTemplates" class="btn btn-primary" onClick="showSurveyTemplates()">view Survey Template Library</button>
+			</div>
+			<div class="col-xs-2">
+				<button id="viewSurveyResults" class="btn btn-primary" onClick="showSurveyResults()">view Survey Results Library</button>
+			</div>
+		</div>
+	</div>
+	<div id='fileNames' style="display: none">
+		<table  width="60%" id="tab" style="margin-left:200px;">
+			<thead>
+				<tr>
+					<th>Clients</th>
+				</tr>
+			<thead>
+			<tbody id="tablediv">
+			</tbody>
+		</table>
+	</div>
+</div>
 
 <div id="copyright" class="container">
 	<p> Software Engineering 409 ,  Fall 2016,  Iowa State University</p>
 </div>
+
 </body>
 </html>
